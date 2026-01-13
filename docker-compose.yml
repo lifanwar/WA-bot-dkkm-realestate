@@ -10,6 +10,11 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+    volumes:
+      - ./baileys.log:/app/baileys.log
+      - ./core.class.log:/app/core.class.log
+      - ./queue.class.log:/app/queue.class.log
+      - ./bot_sessions:/app/bot_sessions
     logging:
       driver: "json-file"
       options:
