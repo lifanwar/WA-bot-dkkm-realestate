@@ -1,0 +1,14 @@
+services:
+  app:
+    container_name: dkkm-web-prod
+    build:
+      context: .
+      args:
+        - PORT=${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
