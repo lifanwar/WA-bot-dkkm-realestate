@@ -1,6 +1,6 @@
 services:
   app:
-    container_name: dkkm-web-prod
+    container_name: dkkm-builderbot-prod
     build:
       context: .
       args:
@@ -9,6 +9,4 @@ services:
       - "${PORT}:${PORT}"
     env_file:
       - .env
-    environment:
-      - NODE_ENV=production
     restart: unless-stopped
