@@ -1,4 +1,4 @@
-import 'dotenv/config'  // TAMBAHKAN BARIS INI DI PALING ATAS
+import {} from 'dotenv/config'
 import { createBot, createProvider, createFlow, addKeyword } from '@builderbot/bot'
 import { PostgreSQLAdapter as Database } from '@builderbot/database-postgres'
 import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
