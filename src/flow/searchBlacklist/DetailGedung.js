@@ -26,6 +26,21 @@ const detailGedungFlow = addKeyword('.detailGedung')
                     'X-API-Key': process.env.APIKEY_IMARAH_BLACKLIST
                 }
             })
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API Error:', response.status, errorText.substring(0, 200));
+                await flowDynamic(`❌ API Error ${response.status}`);
+                return;
+            }
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType?.includes('application/json')) {
+                const errorText = await response.text();
+                console.error('Not JSON:', errorText.substring(0, 200));
+                await flowDynamic('⚠️ Invalid API response');
+                return;
+            }
             
             const gedung = await response.json()
             
