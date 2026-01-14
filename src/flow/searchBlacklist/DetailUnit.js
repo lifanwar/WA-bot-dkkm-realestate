@@ -19,8 +19,12 @@ const detailUnitFlow = addKeyword('.detailUnit')
                     await flowDynamic('⏳ Loading unit detail...')
                 }
             });
+
+            console.log('🔍 Request Details:')
+            console.log('  URL:', `${process.env.DOMAIN_API_URL}/api/unit/${uuid}`)
+            console.log('  API Key:', process.env.APIKEY_IMARAH_BLACKLIST ? '✓ Loaded' : '✗ Missing')
             
-            const response = await fetch(`https://staging.jastipin.id/api/unit/${uuid}`, {
+            const response = await fetch(`${process.env.DOMAIN_API_URL}/api/unit/${uuid}`, {
                 method: 'GET',
                 headers: {
                     'accept': 'application/json',
