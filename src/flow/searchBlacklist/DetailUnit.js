@@ -20,7 +20,7 @@ const detailUnitFlow = addKeyword('.detailUnit')
                 }
             });
             
-            const response = await fetch(`${process.env.DOMAIN_API_URL}/api/unit/${uuid}`, {
+            const response = await fetch(`https://staging.jastipin.id/api/unit/${uuid}`, {
                 method: 'GET',
                 headers: {
                     'accept': 'application/json',
