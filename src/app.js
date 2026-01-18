@@ -2,6 +2,8 @@ import {} from 'dotenv/config'
 import { createBot, createProvider, createFlow, addKeyword } from '@builderbot/bot'
 import { PostgreSQLAdapter as Database } from '@builderbot/database-postgres'
 import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+// Utils
+import { idleFlow } from './utils/idle-custom.js'
 
 // Bisnis Logic
 import {
@@ -10,6 +12,7 @@ import {
     detailUnitFlow
 } from './flow/index.js'
 
+
 const PORT = process.env.PORT ?? 3008
 
 // Flow minimal hanya untuk memastikan bot aktif
@@ -17,7 +20,7 @@ const welcomeFlow = addKeyword(['hi', 'hello', 'hola'])
     .addAnswer('Bot is active')
 
 const main = async () => {
-    const adapterFlow = createFlow([welcomeFlow, handlingLocationFlow, detailGedungFlow, detailUnitFlow])
+    const adapterFlow = createFlow([idleFlow, welcomeFlow, handlingLocationFlow, detailGedungFlow, detailUnitFlow])
     
     const adapterProvider = createProvider(Provider, {
           timeRelease: 10800000,        // Cleans up data every 3 hours (in milliseconds)
