@@ -1,10 +1,12 @@
 import { addKeyword, EVENTS } from '@builderbot/bot'
+import { reset, start, stop } from '../../utils/idle-custom.js'
 
 // Object untuk menyimpan timestamp terakhir user mengirim location
 const userLocationTimestamps = {}
 
 const handlingLocationFlow = addKeyword(EVENTS.LOCATION)
-    .addAction(async (ctx, { state, endFlow }) => {
+    .addAction(async (ctx, { state, endFlow, gotoFlow }) => {
+        start(ctx, gotoFlow, 120000) // start idle 2menit
         const userId = ctx.from
         const currentTime = Date.now()
         const oneMinute = 60 * 1000 // 60 detik dalam milidetik
@@ -35,11 +37,13 @@ const handlingLocationFlow = addKeyword(EVENTS.LOCATION)
     .addAnswer(
         '📍 Lokasi diterima!\n\nBerapa meter radius pencarian yang Anda inginkan?\n\nContoh: 500\n\nKetik *exit* untuk membatalkan',
         { capture: true },
-        async (ctx, { state, fallBack, endFlow }) => {
+        async (ctx, { state, fallBack, endFlow, gotoFlow }) => {
+            reset(ctx, gotoFlow, 120000)
             const input = ctx.body.trim().toLowerCase()
             
             // Cek jika user ingin exit
             if (input === 'exit' || input === 'batal' || input === 'cancel') {
+                stop(ctx)
                 return endFlow('❌ Pencarian dibatalkan.')
             }
             
@@ -47,6 +51,7 @@ const handlingLocationFlow = addKeyword(EVENTS.LOCATION)
             
             // Validasi angka & radius lebih dari 1km
             if (isNaN(radius) || radius <= 0 || radius > 1000) {
+                reset(ctx, gotoFlow, 120000)
                 return fallBack('❌ Mohon masukkan angka yang valid antara 1-1000m (contoh: 500)\n\nAtau ketik *exit* untuk membatalkan')
             }
             
@@ -56,6 +61,7 @@ const handlingLocationFlow = addKeyword(EVENTS.LOCATION)
     )
     .addAction(async (ctx, { flowDynamic, state, provider }) => {
         try {
+            stop(ctx) // stop idle
             const lat = state.get('lat')
             const long = state.get('long')
             const radius = state.get('radius')
