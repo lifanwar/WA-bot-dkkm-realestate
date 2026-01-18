@@ -45,14 +45,9 @@ const handlingLocationFlow = addKeyword(EVENTS.LOCATION)
             
             const radius = parseInt(ctx.body)
             
-            // Validasi input harus angka
-            if (isNaN(radius) || radius <= 0) {
-                return fallBack('❌ Mohon masukkan angka yang valid (contoh: 500)\n\nAtau ketik *exit* untuk membatalkan')
-            }
-
-            // Validasi maksimal 1000
-            if (radius > 1000) {
-                return fallBack('❌ Radius tidak boleh lebih dari 1000 meter\n\nMohon masukkan angka antara 1-1000 (contoh: 1000)\n\nAtau ketik *exit* untuk membatalkan')
+            // Validasi angka & radius lebih dari 1km
+            if (isNaN(radius) || radius <= 0 || radius > 1000) {
+                return fallBack('❌ Mohon masukkan angka yang valid antara 1-1000m (contoh: 500)\n\nAtau ketik *exit* untuk membatalkan')
             }
             
             // Simpan radius ke state
