@@ -1,8 +1,36 @@
 import { addKeyword } from '@builderbot/bot'
 import typingEffect from '../../utils/typing-effect.js'
 
+// Rate limiting: 15 detik per user
+const userDetailUnitTimestamps = {}
+const RATE_LIMIT_SECONDS = 15
+
 const detailUnitFlow = addKeyword('.detailUnit')
     .addAction(async (ctx, { flowDynamic, provider }) => {
+        const userId = ctx.from
+        const currentTime = Date.now()
+        const rateLimitMs = RATE_LIMIT_SECONDS * 1000
+        
+        // Validasi rate limit
+        if (userDetailUnitTimestamps[userId]) {
+            const timeDiff = currentTime - userDetailUnitTimestamps[userId]
+
+            if (timeDiff < rateLimitMs) {
+                const remainingSeconds = Math.ceil((rateLimitMs - timeDiff) / 1000)
+                console.log('🚫 RATE LIMITED! Remaining:', remainingSeconds, 'seconds')
+                try {
+                    await flowDynamic(`⏱️ Mohon tunggu *${remainingSeconds} detik* lagi.`)
+                } catch (err) {
+                    console.error('flowDynamic error:', err)
+                }
+                return
+            }
+        }
+
+        
+        // Update timestamp user
+        userDetailUnitTimestamps[userId] = currentTime
+
         const uuidMatch = ctx.body.match(/\.detailUnit([a-f0-9-]{36})/i)
         if (!uuidMatch) {
             await typingEffect(ctx, { provider }, 200);
